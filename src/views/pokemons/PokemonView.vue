@@ -1,28 +1,19 @@
 <script setup>
-import axios from 'axios';
-import {ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {useGetData} from "../../composables/useGetData";
+import {useRoute} from "vue-router";
 import Poke from "../../components/pokemons/partials/Poke.vue";
+import {toast} from "vue3-toastify";
 
-const $route = useRoute();
-const $router = useRouter();
-const pokemon = ref({});
-const ready = ref(false);
+const $route = useRoute()
 
-const getPokemon = async () => {
-  try {
-    const {data} = await axios.get(`https://pokeapi.co/api/v2/pokemon/${$route.params.name}`)
-    pokemon.value = data;
-  } catch ($error) {
-    await $router.push('/:pathMatch(.*)*')
-  } finally {
-    ready.value = true;
-  }
-}
+const {getData, data, ready, error} = useGetData();
 
-getPokemon()
+getData(`https://pokeapi.co/api/v2/pokemon/${$route.params.name}`)
 </script>
 
 <template>
-  <Poke v-if="ready" :pokemon="pokemon"/>
+  <div v-if="ready">
+    <Poke v-if="!error" :pokemon="data"/>
+    <h1 v-else>Pokemon no encontrado</h1>
+  </div>
 </template>

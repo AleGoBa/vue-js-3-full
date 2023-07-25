@@ -1,24 +1,12 @@
 <script setup>
-import axios from 'axios';
 import {ref} from "vue";
 import PokeList from "../../components/pokemons/partials/PokeList.vue";
+import {useGetData} from "../../composables/useGetData.js"
 
-const pokemons = ref([]);
-const ready = ref(false);
-const getPokemons = async () => {
-  try {
-    const {data} = await axios.get('https://pokeapi.co/api/v2/pokemon', {
-      params: {
-        limit: 10, offset: 10
-      }
-    })
-    pokemons.value = data.results;
-  } finally {
-    ready.value = true;
-  }
-}
+const {getData, data, ready, error} = useGetData();
 
-getPokemons();
+getData('https://pokeapi.co/api/v2/pokemon/?offset=20&limit=10')
+
 </script>
 
 <template>
@@ -26,8 +14,21 @@ getPokemons();
     <section class="card-header p-3">
       <h1>Lista de nombres de pokemones</h1>
     </section>
-    <section class="card-body p-3">
-      <PokeList v-if="ready" :pokemons="pokemons"/>
+    <section v-if="!error && ready" class="card-body p-3">
+      <PokeList :pokemons="data.results"/>
+      <div class="d-flex justify-content-center">
+        <button class="btn btn-primary m-4" @click="getData(data.previous)"
+                :disabled="!data.previous">
+          Previo
+        </button>
+        <button class="btn btn-primary m-4" @click="getData(data.next)"
+                :disabled="!data.next">
+          Siguiente
+        </button>
+      </div>
+    </section>
+    <section v-else>
+      <h1>Hubo un error al buscar pokemones</h1>
     </section>
   </main>
 </template>
