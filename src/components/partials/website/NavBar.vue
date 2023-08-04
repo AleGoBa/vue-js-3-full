@@ -13,6 +13,9 @@
           <li class="nav-item">
             <router-link to="pokemons" class="nav-link">Pokemones</router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="pokemons/favorites" class="nav-link">Lista de favoritos</router-link>
+          </li>
         </ul>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

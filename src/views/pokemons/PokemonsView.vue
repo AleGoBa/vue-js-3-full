@@ -1,5 +1,4 @@
 <script setup>
-import {ref} from "vue";
 import PokeList from "../../components/pokemons/partials/PokeList.vue";
 import {useGetData} from "../../composables/useGetData.js"
 
